@@ -1,18 +1,16 @@
 class Car{
-  constructor(x,y,maxSpeed,acceleration){
+  constructor(x,y,rotation,maxSpeed,acceleration){
     this.coord=createVector(x,y); //Check if it can be only one value
     this.size=[25,50]
 
-    this.rotation=PI*1.5;
+    this.rotation=rotation;
     this.steering=0; //Rotation of the wheels
     this.maxSteering=PI/8;
     this.rotationSpeed=0.16;
 
-    this.maxSpeed = 10;
+    this.maxSpeed = maxSpeed;
     this.acceleration = acceleration;
     this.vel=0;
-
-    this.noMove=0;
 
     //Collisions
     this.collisions = [
@@ -35,6 +33,7 @@ class Car{
 
     //Gates
     this.gate=0;
+    this.noGate=0;
 
     //Neat
     this.fitness=1;
@@ -97,6 +96,7 @@ class Car{
     }else{
       tempGate=race.getGateNumber()-this.gate-4;
     }
+    let prevGate=this.gate;
     for(let x=0;x<this.collisions.length;x++){
       if(x==this.collisions.length-1){
         if(race.testCollision([this.collisions[x], this.collisions[0]])){
@@ -129,6 +129,14 @@ class Car{
           this.die();
         }
       }
+      if(this.gate===prevGate){
+        this.noGate++;
+      }else{
+        this.noGate=0;
+      }
+      if(this.noGate>=1000){
+        this.die();
+      }
     }
 
     //Neat
@@ -143,10 +151,11 @@ class Car{
       if(closest != null){
         if(globalSighDisplay){
           push();
+          stroke('purple');
           line(this.coord.x,this.coord.y,coord2.x,coord2.y);
           fill('red');
           noStroke();
-          ellipse(closest[0].x,closest[0].y,30, 30);
+          ellipse(closest[0].x,closest[0].y,25, 25);
           pop();
         }
         inputs.push(closest[1]);
@@ -156,10 +165,16 @@ class Car{
     }
 
     return inputs;
-    //return [this.steering,this.vel,target.getX(),target.getY(),this.coord.x,this.coord.y,int(dist(this.coord.x,target.getX(),this.coord.y,target.getY()))]; //HERE
   }
-  draw(){
-    fill('white');
+
+  draw(highlight=false){
+    if(highlight){
+      fill('#c7505f');
+    }else if(this.alive){
+      fill('white');
+    }else{
+      fill('grey');
+    }
     stroke('purple');
     strokeWeight(5);
 

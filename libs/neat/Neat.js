@@ -102,7 +102,7 @@ class Neat{
     for(let x=0;x<genes[layer].length;x++){ //For each genes in a random layer -- Check if "each genes in each layer" isn't better
       if(floor(random(0,100))<=this.mutationRate*100){
         for(let y=0;y<genes[layer][x].length;y++){ //For each weights
-          let rdmChange = random(-0.01,0.01);
+          let rdmChange = random(-0.1,0.1);
           newGenes[layer][x][y] +=rdmChange;
         }
       }

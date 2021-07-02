@@ -15,6 +15,16 @@ class Race{
       line(this.outer[x][0],this.outer[x][1],this.outer[x+1][0],this.outer[x+1][1]);
     }
   }
+  drawGates(){
+    for(let x=0;x<this.gate.length-1;x++){
+      stroke('yellow');
+      line(this.gate[x][0][0],this.gate[x][0][1],this.gate[x][1][0],this.gate[x][1][1]);
+    }
+  }
+
+  drawGate(index){
+
+  }
 
   testCollision(line){ //Line: [vector, vector]
     for(let x=0;x<this.inner.length-1;x++){

@@ -1,6 +1,6 @@
 <html>
   <head>
-
+    <link rel="stylesheet" href="src/css/css.css">
     <script language=" javascript" type="text/javascript" src="libs/p5.js"></script>
 
     <script language=" javascript" type="text/javascript" src="libs/neat/Neat.js"></script>
@@ -17,7 +17,104 @@
   </head>
   <body>
 
+    <div class="optionsPane">
 
+      <label for="informationsDisplay">Global information : </label>
+      <div id="informationsDisplay" class="infoDiv optDiv">
+        <span id="generation"></span>
+        <span id="alive"></span>
+        <span id="bestScore"></span>
+        <span id="previousScore"></span>
+        <canvas id="scoreChart" width="400" height="400"></canvas>
+      </div>
+
+      <label for="parameters">Global parameters : </label>
+      <div id="parameters" class="optDiv">
+        <div class="option">
+          <label for="speedSlider">Speed : </label>
+          <span id="speedSlider"></span>
+          <span id="speedDisplay"></span>
+        </div>
+        <div class="option">
+          <label for="maxSpeedSlider">Car max speed : </label>
+          <span id="maxSpeedSlider"></span>
+          <span id="maxSpeedDisplay"></span>
+        </div>
+        <div class="option">
+          <label for="accelerationSlider">Car acceleration : </label>
+          <span id="accelerationSlider"></span>
+          <span id="accelerationDisplay"></span>
+        </div>
+        <div class="option">
+          <label for="frixionSlider">Frixion : </label>
+          <span id="frixionSlider"></span>
+          <span id="frixionDisplay"></span>
+        </div>
+        <div class="option">
+          <input type="checkbox" id="boxBestPlayerOnly">
+          <label for="boxBestPlayerOnly"> Show best creature only</label>
+        </div>
+        <div class="option">
+          <input type="checkbox" id="boxHighlight">
+          <label for="boxHighlight"> Highlight best creature</label>
+        </div>
+        <div class="option">
+          <input type="checkbox" id="boxSights">
+          <label for="boxSights"> Show sights (make it work with single player display)</label>
+        </div>
+        <div class="option">
+          <input type="checkbox" id="showTrack" checked>
+          <label for="showTrack"> Show track</label>
+        </div>
+        <div class="option">
+          <input type="checkbox" id="showGates">
+          <label for="showGates"> Show gates</label>
+        </div>
+        <div class="option">
+          <input type="checkbox" id="onlyShowNextGateToBestPlayer">
+          <label for="onlyShowNextGateToBestPlayer"> Show next gate to best player</label>
+        </div>
+      </div>
+
+      <label for="neatInformations">Neat information : </label>
+      <div id="neatInformations" class="infoDiv optDiv">
+        <span id="generationDisplay"></span>
+        <span id="mutationDisplay"></span>
+        <span id="populationDisplay"></span>
+        <span id="bestFitDisplay"></span>
+      </div>
+
+      <label for="parameters">Neat parameters : </label>
+      <div id="neatParameters" class="optDiv">
+        <div class="option">
+          <label for="creatureSlider">Creature number : </label>
+          <span id="creatureSlider"></span>
+        </div>
+        <div class="option">
+          <label for="mutationRateSlider">Mutation rate : </label>
+          <span id="mutationRateSlider"></span>
+        </div>
+        <div class="option">
+          <button type="button" name="button" onclick="start();">Kill all (or press 'r')</button>
+        </div>
+        <div class="option">
+          <button type="button" name="button" onclick="restart();">Restart (or press 'y')</button>
+        </div>
+      </div>
+
+      <label for="play">Play (WIP) : </label>
+      <div id="play" class="optDiv">
+        <div class="option">
+          <input type="checkbox" id="boxPlay">
+          <label for="boxPlay"> Play</label>
+        </div>
+        <div class="option">
+          <input type="checkbox" id="boxPlayBot">
+          <label for="boxSights"> Against bot</label>
+        </div>
+      </div>
+
+    </div>
 
     <div id="mainCanvas"></div>
   </body>

@@ -1,5 +1,4 @@
-const frixion = 0.05;
-var ticks=0;
+var frixion = 0.05;
 var car;
 var nnDisplay;
 var racePattern={
@@ -14,14 +13,21 @@ var racePattern={
   ]
 };
 var race;
+var spawnCars;
+var alive=0;
+var numGen=100;
 
 //Debug
 var globalSighDisplay = false;
 var playerCar = false;
+var displayBest = false;
+var highlightBest = false;
+var showTrack = true;
+var showGates = false;
+var gameSpeed = 1;
 
 //Neat parameters
 var cars = [];
-let numGen=100;
 var mutationRate = 0.15;
 let config = {
   layer: [
@@ -43,99 +49,138 @@ let neat;
 //let tempGate2=null;
 
 function setup(){
+  //Canvas
   window.canvas = createCanvas(2000, 1350);
   window.canvas.parent('mainCanvas');
-
-  if(playerCar){
-    car = new Car(1000, 100, 5, 0.5);
-  }
-  race = new Race(racePattern);
   rectMode(CENTER);
-  for(x=0;x<numGen;x++){
-      cars.push(new Car(1000, 100, 5, 0.5));
+
+  //Game parameters
+  race = new Race(racePattern);
+  spawnCars = [1000,100,PI*1.5,10,0.5];
+  //Player
+  if(playerCar){
+    car = new Car(spawnCars[0], spawnCars[1], spawnCars[2], spawnCars[3], spawnCars[4]);
   }
-  neat = new Neat(numGen, mutationRate, config);
+  //Neat
+  restart();
+
+  //GUI
+  creatureSlider = createSlider(1, 1000, neat.popSize);
+  creatureSlider.parent('creatureSlider');
+  mutationRateSlider = createSlider(0.01, 1, neat.mutationRate, 0.01);
+  mutationRateSlider.parent('mutationRateSlider');
+  frixionSlider = createSlider(0.00, 1, frixion, 0.01);
+  frixionSlider.parent('frixionSlider');
+  maxSpeedSlider = createSlider(1, 100, spawnCars[3], 1);
+  maxSpeedSlider.parent('maxSpeedSlider');
+  accelerationSlider = createSlider(0.1, 50, spawnCars[4], 0.1);
+  accelerationSlider.parent('accelerationSlider');
+  speedSlider = createSlider(0, 20, gameSpeed, 1);
+  speedSlider.parent('speedSlider');
 }
 
 function draw(){
-  ticks++;
+  document.getElementById('mutationDisplay').innerHTML= ("Mutation rate : " + neat.mutationRate);
+	document.getElementById('populationDisplay').innerHTML= ("Population size : "+neat.popSize);
+  document.getElementById('bestFitDisplay').innerHTML= ("Best fitness : "+neat.getBestCreature()[0].fit);
+  document.getElementById('generationDisplay').innerHTML= ("Generation : "+(neat.generation+1));
+  neat.setCreatureNum(creatureSlider.value());
+  neat.setMutationRate(mutationRateSlider.value());
+  globalSighDisplay = document.getElementById('boxSights').checked;
+  displayBest = document.getElementById('boxBestPlayerOnly').checked;
+  highlightBest = document.getElementById('boxHighlight').checked;
+  showTrack = document.getElementById('showTrack').checked;
+  showGates = document.getElementById('showGates').checked;
+  frixion = frixionSlider.value();
+  document.getElementById('frixionDisplay').innerHTML= frixion;
+  spawnCars[3]=maxSpeedSlider.value();
+  spawnCars[4]=accelerationSlider.value();
+  document.getElementById('maxSpeedDisplay').innerHTML= spawnCars[3];
+  document.getElementById('accelerationDisplay').innerHTML= spawnCars[4];
+  gameSpeed = speedSlider.value();
+  document.getElementById('speedDisplay').innerHTML= gameSpeed;
+  document.getElementById('alive').innerHTML= ("Alive : "+alive+" / "+cars.length);
+  numGen=neat.popSize;
+
   background('black');
 
-  /*if(ticks%350===0){
-    console.log('hey');
-    start();
-  }*/
-
-  for(i=0;i<numGen;i++){
-    if(cars[i].alive){
-      neat.setInputs(cars[i].getInputs(),i);
-      neat.setFitness(cars[i].fitness, i);
-    }
-  }
-  neat.feedForward();
-  let stillAlive=false;
-  for(i=0;i<numGen;i++){
-    if(cars[i].alive){
-      let outputs = neat.getOutput(i);
-      if(outputs[0]>0.5){
-        cars[i].move('left');
-      }else{
-        cars[i].move('right');
+  for(let z=0;z<gameSpeed;z++){
+    alive=0;
+    for(i=0;i<cars.length;i++){
+      if(cars[i].alive){
+        alive++;
+        neat.setInputs(cars[i].getInputs(),i);
+        neat.setFitness(cars[i].fitness, i);
       }
-      if(outputs[1]>0.5){
-        cars[i].move('right');
+    }
+    neat.feedForward();
+    let best = neat.getBestCreature();
+    let stillAlive=false;
+    for(i=0;i<cars.length;i++){
+      if(cars[i].alive){
+        let outputs = neat.getOutput(i);
+        if(outputs[0]>0.5){
+          cars[i].move('left');
+        }else{
+          cars[i].move('right');
+        }
+        if(outputs[1]>0.5){
+          cars[i].move('right');
+        }
+        if(outputs[2]>0.5){
+          cars[i].move('up');
+        }/*else{
+          cars[i].move('down');
+        }*/
+        /*if(outputs[3]>0.5){
+          cars[i].move('down');
+        }*/
+
+        cars[i].update();
+        if(z==gameSpeed-1){
+          if(!displayBest) cars[i].draw();
+        }
+        stillAlive=true;
       }
-      if(outputs[2]>0.5){
-        cars[i].move('up');
-      }/*else{
-        cars[i].move('down');
-      }*/
-      /*if(outputs[3]>0.5){
-        cars[i].move('down');
-      }*/
+    }
+    if(z==gameSpeed-1){
+      if(displayBest) cars[best[1]].draw();
+      if(highlightBest) cars[best[1]].draw(true);
+      if(nnDisplay){
+        nnDisplay.remove();
+      }
+      nnDisplay = neat.getNeuralDisplay(best[1], 300, 300, 15);
+    	image(nnDisplay, 100,300);
+    }
 
-      cars[i].update();
-      cars[i].draw();
-      stillAlive=true;
+    if(!stillAlive){
+      start();
+    }
+
+    //Manual play
+    if(playerCar){
+      if(keyIsDown(LEFT_ARROW)){
+        car.move('left');
+      }
+      if (keyIsDown(RIGHT_ARROW)) {
+        car.move('right');
+      }
+      if (keyIsDown(UP_ARROW)) {
+        car.move('up');
+      }
+      if (keyIsDown(DOWN_ARROW)) {
+        car.move('down');
+      }
+      if(car.alive){
+        car.update();
+        if(z==gameSpeed-1) car.draw();
+      }
+    }
+    if(z==gameSpeed-1){
+      if(showTrack) race.draw();
+      if(showGates) race.drawGates();
     }
   }
-
-  if(!stillAlive){
-    start();
-  }
-
-  let bestI = neat.getBestCreature()[1];
-  if(nnDisplay){
-    nnDisplay.remove();
-  }
-  nnDisplay = neat.getNeuralDisplay(bestI, 300, 300, 15);
-	image(nnDisplay, 100,300);
-
-  //Manual play
-  if(playerCar){
-    if(keyIsDown(LEFT_ARROW)){
-      car.move('left');
-    }
-    if (keyIsDown(RIGHT_ARROW)) {
-      car.move('right');
-    }
-    if (keyIsDown(UP_ARROW)) {
-      car.move('up');
-    }
-    if (keyIsDown(DOWN_ARROW)) {
-      car.move('down');
-    }
-    if(car.alive){
-      car.update();
-      car.draw();
-    }
-  }
-
-  race.draw();
-
-  strokeWeight(1);
-  text(mouseX,15,15);
-  text(mouseY,15,35);
 
 
   //Race drawing
@@ -160,10 +205,17 @@ function draw(){
 
 function start(){
   cars=[];
-  for(x=0;x<numGen;x++){
-      cars.push(new Car(1000, 100, 5, 0.5));
+  for(x=0;x<neat.popSize;x++){
+      cars.push(new Car(spawnCars[0], spawnCars[1], spawnCars[2], spawnCars[3], spawnCars[4]));
   }
   neat.makePop();
+}
+function restart(){
+  cars=[];
+  neat = new Neat(numGen, mutationRate, config);
+  for(x=0;x<neat.popSize;x++){
+      cars.push(new Car(spawnCars[0], spawnCars[1], spawnCars[2], spawnCars[3], spawnCars[4]));
+  }
 }
 
 function lineIntersection(x1, y1, x2, y2, x3, y3, x4, y4) {
@@ -182,10 +234,7 @@ function keyPressed(){
     start();
   }
   if(key==='y'){
-    for(x=0;x<numGen;x++){
-        cars.push(new Car(1000, 100, 5, 0.5));
-    }
-    neat = new Neat(numGen, mutationRate, config);
+    restart();
   }
 }
 

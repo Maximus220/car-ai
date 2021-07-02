@@ -1,3 +1,35 @@
-#mainCanvas{
-  
+body{
+  display: flex;
+  justify-content: space-around;
+  align-content: flex-start;
+  flex-flow: row wrap;
+  /*background-color: #c0c1c2; /*If you want to save developer's eyes*/
+}
+.optionsPane{
+  display: flex;
+  justify-content: center;
+  align-content: flex-start;
+  flex-direction: column;
+
+}
+.optDiv{
+  border: 1px solid;
+  border-radius: 10px;
+  border-color: BLACK;
+  padding: 1em;
+  margin-bottom: 30px;
+}
+.infoDiv{
+  display: flex;
+  justify-content: center;
+  align-content: flex-start;
+  flex-direction: column;
+}
+.option{
+  display: flex;
+  justify-content: center;
+  align-content: flex-start;
+  flex-direction: row;
+
+  padding: 7px 0 7px 0;
 }
