@@ -1,10 +1,14 @@
 class Neat{
-  constructor(popSize, mutationRate, nnConfig){
+  constructor(popSize, mutationRate, nnConfig, crossoverConfig){
     this.mutationRate = mutationRate;
     this.pop = [];
     this.nnConfig = nnConfig;
     this.generation=0;
     this.popSize = popSize;
+    this.crossoverType = crossoverConfig.type || "halfFromParent";//"halfFromParent"; "percentOfHalfParent"; "biggerRandomPart"
+    //For "percentOfHalfParent" method
+    this.randomSupplement = crossoverConfig.randomSupplement || 0.25;
+
     for(let x=0;x<this.popSize;x++){
       let tWeights = [];
       for(let i=0;i<nnConfig.layer.length-1;i++){ //For each layers except output one
@@ -57,34 +61,55 @@ class Neat{
     return temp; //[creature, index]
   }
 
-  makePop(){
+  makePop(fromGene){
     let newPop = [];
     //Create pool
     let pool = [];
-    let bestFit = this.getBestCreature()[0].fit;
-    for(let x=0;x<this.pop.length;x++){
-      for(let y=0;y<floor(map(this.pop[x].fit, 0, bestFit, 0, 1000));y++){
-        pool.push(this.pop[x]);
+    if(!fromGene/*||fromGene.length!=*/){ //Eventually add other test later
+      let bestFit = this.getBestCreature()[0].fit;
+      for(let x=0;x<this.pop.length;x++){
+        for(let y=0;y<floor(map(this.pop[x].fit, 0, bestFit, 0, 1000));y++){
+          pool.push(this.pop[x]);
+        }
+      }
+      for(let x=0;x<this.popSize;x++){
+        newPop.push(this.crossover(pool));
+      }
+      this.generation++;
+    }else{
+      this.generation=0;
+      let nn = new NeuralNetwork(this.nnConfig);
+      nn.init(fromGene);
+      let fromCreature = new Creature(nn, fromGene);
+      newPop.push(fromCreature); //Add creature once
+      pool = [fromCreature];
+      for(let x=0;x<this.popSize-1;x++){
+        newPop.push(this.crossover(pool));
       }
     }
-    for(let x=0;x<this.popSize;x++){
-      newPop.push(this.crossover(pool));
-    }
     this.pop = newPop;
-    this.generation++;
   }
 
   crossover(pool){ //Return a new creature with mutated genes
     //Get 2 rdm parents
     let parents = [pool[floor(random(0, pool.length))], pool[floor(random(0, pool.length))]];
     let genes = [];
-    //FINAL GENE IS MEAN OF ALL GENES FROM TWO PARENTS
     for(let x=0;x<parents[0].genes.length;x++){ //For each layers
       let tNodes = [];
       for(let y=0;y<parents[0].genes[x].length;y++){ //For each nodes
         let tWeights = [];
         for(let z=0;z<parents[0].genes[x][y].length;z++){ //For each weights
-          tWeights.push((parseFloat(parents[0].genes[x][y][z])+parseFloat(parents[1].genes[x][y][z]))/2);
+          let gene1 = parseFloat(parents[0].genes[x][y][z]);
+          let gene2 = parseFloat(parents[1].genes[x][y][z]);
+          //FINAL GENE IS MEAN OF ALL GENES FROM TWO PARENTS
+          if(this.crossoverType=="halfFromParent"){
+            tWeights.push((gene1+gene2)/2);
+          }else if(this.crossoverType=="randomPercentage"){
+            let rdmPercentage = random(0,2);
+            tWeights.push((gene1*rdmPercentage+gene2*(2-rdmPercentage))/2);
+          }else if(this.crossoverType=="biggerRandomPart"){
+            tWeights.push((gene1+gene2)/2+random(-0.5,0.5)*this.randomSupplement);
+          }
         }
         tNodes.push(tWeights);
       }

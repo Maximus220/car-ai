@@ -3,6 +3,9 @@ class Race{
     this.inner=pattern.inner;
     this.outer=pattern.outer;
     this.gate=pattern.gates;
+
+    this.spawn=pattern.spawn;
+    this.nnDisplay=pattern.nnDisplay;
   }
 
   draw(){

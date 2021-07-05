@@ -2,6 +2,7 @@
   <head>
     <link rel="stylesheet" href="src/css/css.css">
     <script language=" javascript" type="text/javascript" src="libs/p5.js"></script>
+    <script language="javascript" type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
 
     <script language=" javascript" type="text/javascript" src="libs/neat/Neat.js"></script>
     <script language=" javascript" type="text/javascript" src="libs/neat/Creature.js"></script>
@@ -18,6 +19,13 @@
   <body>
 
     <div class="optionsPane">
+
+      <label for="raceParameters">Race parameters : </label>
+      <div id="raceParameters" class="optDiv">
+        <div class="option">
+          <button type="button" name="button" onclick="drawRace();" id="drawRaceButton">Draw a race</button>
+        </div>
+      </div>
 
       <label for="informationsDisplay">Global information : </label>
       <div id="informationsDisplay" class="infoDiv optDiv">
@@ -100,17 +108,29 @@
         <div class="option">
           <button type="button" name="button" onclick="restart();">Restart (or press 'y')</button>
         </div>
+
+        <div class="option">
+          <!--<label for="currentBestCrea">Current best creature : </label>-->
+          <textarea id="currentBestCrea" rows="7" cols="33" wrap="soft" placeholder="Click the below button to get best creature's brain..." readonly></textarea>
+        </div>
+        <div class="option">
+          <button type="button" name="button" onclick="writeCurrentBestCreature();">Get current best creature</button>
+        </div>
+
+        <div class="option">
+          <!--<label for="createFromCreature">Create generation from creature : </label>-->
+          <textarea id="createFromCreature" rows="7" cols="33" wrap="soft" placeholder="Paste a creature's brain here to try it!"></textarea>
+        </div>
+        <div class="option">
+          <button type="button" name="button" onclick="createFromCreature();">Make generation from creature</button>
+        </div>
       </div>
 
-      <label for="play">Play (WIP) : </label>
+      <label for="play">Play : </label>
       <div id="play" class="optDiv">
         <div class="option">
           <input type="checkbox" id="boxPlay">
           <label for="boxPlay"> Play</label>
-        </div>
-        <div class="option">
-          <input type="checkbox" id="boxPlayBot">
-          <label for="boxSights"> Against bot</label>
         </div>
       </div>
 

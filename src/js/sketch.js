@@ -10,6 +10,20 @@ var racePattern={
   ],
   "gates":[
     [[1180.598111555778,35.0078125],[1147.5816033016508,208.0078125]],[[1414.7151700850425,53.0078125],[1249.632628814407,224.0078125]],[[1645.8307278639318,121.0078125],[1255.6356303151574,281.0078125]],[[1693.854739869935,301.0078125],[1222.6191220610303,313.0078125]],[[1597.8067158579288,406.0078125],[1189.6026138069035,382.0078125]],[[1481.7486868434216,487.0078125],[1153.5846048024011,470.0078125]],[[1418.7171710855428,559.0078125],[1157.5866058029014,635.0078125]],[[1460.7381815907954,608.0078125],[1262.639132066033,761.0078125]],[[1529.7726988494246,617.0078125],[1469.7426838419208,826.0078125]],[[1631.823724362181,610.0078125],[1574.7952101050525,850.0078125]],[[1834.9252751375686,626.0078125],[1603.8097173586793,899.0078125]],[[1904.960292646323,710.0078125],[1603.8097173586793,928.0078125]],[[1904.960292646323,890.0078125],[1591.8037143571785,962.0078125]],[[1886.951288144072,1019.0078125],[1591.8037143571785,985.0078125]],[[1843.9297773886942,1108.0078125],[1577.7967108554276,1018.0078125]],[[1804.9102676338168,1171.0078125],[1544.7802026013005,1039.0078125]],[[1726.871248124062,1238.0078125],[1514.7651950975487,1048.0078125]],[[1636.8262256128064,1276.0078125],[1480.7481865932966,1052.0078125]],[[1544.7802026013005,1282.0078125],[1403.7096673336669,1049.0078125]],[[1385.7006628314157,1310.0078125],[1316.6661455727863,1049.0078125]],[[1223.6196223111556,1312.0078125],[1166.591108054027,1046.0078125]],[[1109.5625937968985,1301.0078125],[1006.511068034017,1037.0078125]],[[866.4410330165082,1294.0078125],[845.4305277638819,1049.0078125]],[[694.3549899949975,1280.0078125],[725.3704977488744,1052.0078125]],[[559.287456228114,1259.0078125],[640.3279764882441,1019.0078125]],[[469.2424337168584,1217.0078125],[598.3069659829914,1024.0078125]],[[392.2039144572286,1156.0078125],[578.2969609804902,998.0078125]],[[359.18740620310155,1069.0078125],[580.2979614807404,967.0078125]],[[323.16939719859926,965.0078125],[596.3059654827414,926.0078125]],[[343.1794022011005,856.0078125],[646.3309779889945,875.0078125]],[[359.18740620310155,728.0078125],[679.3474862431216,841.0078125]],[[467.2414332166083,628.0078125],[734.375,814.0078125]],[[590.302963981991,572.0078125],[766.391008004002,794.0078125]],[[700.3579914957478,550.0078125],[818.4170210105052,764.0078125]],[[748.3820035017509,530.0078125],[916.4660455227613,731.0078125]],[[773.3945097548774,506.0078125],[1009.5125687843921,664.0078125]],[[772.3940095047524,475.0078125],[1028.5220735367684,535.0078125]],[[761.3885067533766,452.0078125],[1036.5260755377687,398.0078125]],[[746.3810030015007,421.0078125],[1009.5125687843921,278.0078125]],[[709.3624937468734,409.0078125],[832.4240245122561,215.0078125]],[[650.3329789894947,391.0078125],[743.3795022511255,209.0078125]],[[596.3059654827414,380.0078125],[680.3479864932466,218.0078125]],[[529.2724487243621,374.0078125],[590.302963981991,211.0078125]],[[472.2439344672336,373.0078125],[526.270947973987,215.0078125]],[[361.18840670335163,359.0078125],[521.2684467233616,215.0078125]],[[182.09886193096548,277.0078125],[517.2664457228614,214.0078125]],[[128.0718484242121,197.0078125],[514.2649449724862,212.0078125]],[[187.10136318159078,106.0078125],[523.2694472236118,217.0078125]],[[319.167396198099,61.0078125],[512.2639444722361,212.0078125]],[[425.22042271135564,49.0078125],[514.2649449724862,217.0078125]],[[470.24293396698346,37.0078125],[524.2699474737368,212.0078125]],[[523.2694472236118,37.0078125],[511.26344422211105,214.0078125]],[[569.2924587293646,32.0078125],[511.26344422211105,212.0078125]],[[623.319472236118,40.0078125],[589.3024637318659,205.0078125]],[[686.3509879939969,35.0078125],[688.351988494247,202.0078125]],[[754.3850050025012,37.0078125],[758.3870060030015,208.0078125]],[[818.4170210105052,37.0078125],[817.4165207603802,194.0078125]],[[881.4485367683841,32.0078125],[877.4465357678839,197.0078125]],[[928.472048524262,32.0078125],[947.4815532766382,191.0078125]],[[1013.5145697848924,43.0078125],[1009.5125687843921,200.0078125]]
+  ],
+  "spawn":[
+    1000, //x
+    100, //Y
+    4.7123, //Rotation (PI*1.5)
+    25, //Width
+    50 //Height
+  ],
+  "nnDisplay":[
+    300, //Width
+    300, //Height
+    15, //Node Size
+    100, //X
+    300 //Y
   ]
 };
 var race;
@@ -40,13 +54,36 @@ let config = {
     }
   ]
 }
+let crossoverConfig = {
+  type: "biggerRandomPart",
+  randomSupplement: 0.25
+}
 let neat;
 
 //Race drawing
-//let tempRace = [];
-//Gate drawing
+var drawingState=false;
+var tempRace = [];
+
 //let tempGate = [];
 //let tempGate2=null;
+
+//Chart
+var ctx;
+var scoreChart;
+var chartData = {datasets:[{
+	data:[],
+	label:['Fitness'],
+	fill: false,
+	borderColor: ['#3669cf']
+}], labels:[]};
+
+function addScore(data) { //Chart update function
+    scoreChart.data.labels.push(neat.generation);
+		scoreChart.data.datasets.forEach((dataset) => {
+        dataset.data.push(data);
+    });
+    scoreChart.update();
+}
 
 function setup(){
   //Canvas
@@ -58,9 +95,7 @@ function setup(){
   race = new Race(racePattern);
   spawnCars = [1000,100,PI*1.5,10,0.5];
   //Player
-  if(playerCar){
-    car = new Car(spawnCars[0], spawnCars[1], spawnCars[2], spawnCars[3], spawnCars[4]);
-  }
+  loadPlayerCar();
   //Neat
   restart();
 
@@ -77,12 +112,17 @@ function setup(){
   accelerationSlider.parent('accelerationSlider');
   speedSlider = createSlider(0, 20, gameSpeed, 1);
   speedSlider.parent('speedSlider');
+
+  //Chart
+  ctx = document.getElementById('scoreChart').getContext('2d');
+  scoreChart=new Chart(ctx, {type:'line', data: chartData, options: {}});
 }
 
 function draw(){
+  //Options
   document.getElementById('mutationDisplay').innerHTML= ("Mutation rate : " + neat.mutationRate);
 	document.getElementById('populationDisplay').innerHTML= ("Population size : "+neat.popSize);
-  document.getElementById('bestFitDisplay').innerHTML= ("Best fitness : "+neat.getBestCreature()[0].fit);
+  document.getElementById('bestFitDisplay').innerHTML= ("Best fitness : "+neat.getBestCreature()[0].fit+" <=> "+cars[neat.getBestCreature()[1]].lap+" lap(s)");
   document.getElementById('generationDisplay').innerHTML= ("Generation : "+(neat.generation+1));
   neat.setCreatureNum(creatureSlider.value());
   neat.setMutationRate(mutationRateSlider.value());
@@ -91,6 +131,7 @@ function draw(){
   highlightBest = document.getElementById('boxHighlight').checked;
   showTrack = document.getElementById('showTrack').checked;
   showGates = document.getElementById('showGates').checked;
+  playerCar = document.getElementById('boxPlay').checked;
   frixion = frixionSlider.value();
   document.getElementById('frixionDisplay').innerHTML= frixion;
   spawnCars[3]=maxSpeedSlider.value();
@@ -102,84 +143,93 @@ function draw(){
   document.getElementById('alive').innerHTML= ("Alive : "+alive+" / "+cars.length);
   numGen=neat.popSize;
 
-  background('black');
-
-  for(let z=0;z<gameSpeed;z++){
-    alive=0;
-    for(i=0;i<cars.length;i++){
-      if(cars[i].alive){
-        alive++;
-        neat.setInputs(cars[i].getInputs(),i);
-        neat.setFitness(cars[i].fitness, i);
+  //Draw + updates
+  if(!drawingState){
+    for(let z=0;z<gameSpeed;z++){
+      background('black');
+      alive=0;
+      for(i=0;i<cars.length;i++){
+        if(cars[i].alive){
+          alive++;
+          neat.setInputs(cars[i].getInputs(),i);
+          neat.setFitness(cars[i].fitness, i);
+        }
       }
-    }
-    neat.feedForward();
-    let best = neat.getBestCreature();
-    let stillAlive=false;
-    for(i=0;i<cars.length;i++){
-      if(cars[i].alive){
-        let outputs = neat.getOutput(i);
-        if(outputs[0]>0.5){
-          cars[i].move('left');
+      neat.feedForward();
+      let best = neat.getBestCreature();
+      let stillAlive=false;
+      for(i=0;i<cars.length;i++){
+        if(cars[i].alive){
+          let outputs = neat.getOutput(i);
+          if(outputs[0]>0.5){
+            cars[i].move('left');
+          }else{
+            cars[i].move('right');
+          }
+          if(outputs[1]>0.5){
+            cars[i].move('right');
+          }
+          if(outputs[2]>0.5){
+            cars[i].move('up');
+          }/*else{
+            cars[i].move('down');
+          }*/
+          /*if(outputs[3]>0.5){
+            cars[i].move('down');
+          }*/
+
+          cars[i].update();
+          if(z==gameSpeed-1){
+            if(!displayBest) cars[i].draw();
+          }
+          stillAlive=true;
+        }
+      }
+      if(z==gameSpeed-1){
+        if(displayBest) cars[best[1]].draw();
+        if(highlightBest) cars[best[1]].draw('#c7505f');
+        if(nnDisplay){
+          nnDisplay.remove();
+        }
+        nnDisplay = neat.getNeuralDisplay(best[1], 300, 300, 15);
+      	image(nnDisplay, 100,300);
+      }
+
+      if(!stillAlive){
+        start();
+      }
+
+      //Manual play
+      if(playerCar){
+        if(keyIsDown(LEFT_ARROW)){
+          car.move('left');
+        }
+        if (keyIsDown(RIGHT_ARROW)) {
+          car.move('right');
+        }
+        if (keyIsDown(UP_ARROW)) {
+          car.move('up');
+        }
+        if (keyIsDown(DOWN_ARROW)) {
+          car.move('down');
+        }
+        if(car.alive){
+          car.update();
+          if(z==gameSpeed-1) car.draw('#5874fc');
         }else{
-          cars[i].move('right');
+          loadPlayerCar();
         }
-        if(outputs[1]>0.5){
-          cars[i].move('right');
-        }
-        if(outputs[2]>0.5){
-          cars[i].move('up');
-        }/*else{
-          cars[i].move('down');
-        }*/
-        /*if(outputs[3]>0.5){
-          cars[i].move('down');
-        }*/
+      }
+      if(z==gameSpeed-1){
+        if(showTrack) race.draw();
+        if(showGates) race.drawGates();
+      }
+    }
+  }else{
+    //Race drawing
+    background('black');
 
-        cars[i].update();
-        if(z==gameSpeed-1){
-          if(!displayBest) cars[i].draw();
-        }
-        stillAlive=true;
-      }
-    }
-    if(z==gameSpeed-1){
-      if(displayBest) cars[best[1]].draw();
-      if(highlightBest) cars[best[1]].draw(true);
-      if(nnDisplay){
-        nnDisplay.remove();
-      }
-      nnDisplay = neat.getNeuralDisplay(best[1], 300, 300, 15);
-    	image(nnDisplay, 100,300);
-    }
 
-    if(!stillAlive){
-      start();
-    }
-
-    //Manual play
-    if(playerCar){
-      if(keyIsDown(LEFT_ARROW)){
-        car.move('left');
-      }
-      if (keyIsDown(RIGHT_ARROW)) {
-        car.move('right');
-      }
-      if (keyIsDown(UP_ARROW)) {
-        car.move('up');
-      }
-      if (keyIsDown(DOWN_ARROW)) {
-        car.move('down');
-      }
-      if(car.alive){
-        car.update();
-        if(z==gameSpeed-1) car.draw();
-      }
-    }
-    if(z==gameSpeed-1){
-      if(showTrack) race.draw();
-      if(showGates) race.drawGates();
-    }
   }
 
 
@@ -203,19 +253,32 @@ function draw(){
   }*/
 }
 
-function start(){
+//Load player car
+function loadPlayerCar(){
+  car = new Car(race.spawn, spawnCars[3], spawnCars[4]);
+}
+
+//Race drawing
+function drawRace(){
+  drawingState=!drawingState;
+  document.getElementById('drawRaceButton').innerHTML= drawingState ? "Cancel drawing" : "Draw a race";
+}
+
+//Start-restart function neat
+function generateCars(){
   cars=[];
   for(x=0;x<neat.popSize;x++){
-      cars.push(new Car(spawnCars[0], spawnCars[1], spawnCars[2], spawnCars[3], spawnCars[4]));
+      cars.push(new Car(race.spawn, spawnCars[3], spawnCars[4]));
   }
-  neat.makePop();
+}
+function start(){
+  generateCars();
+  addScore(neat.getBestCreature()[0].fit);
+  neat.makePop(/*[[[0.4096840818422428,-0.055636068960655025,-0.26857235465558393],[-0.6423431052147041,0.3068173241562083,0.49295169469630085],[0.10287158621006061,-0.06900661450287218,-0.11768708814919066],[-0.14874823191360848,0.532285399189419,0.07947750196666666],[0.0948671242972238,-0.1846340592239048,0.43639989233216275],[-0.12724760896716986,0.05376411762723943,-0.060197552657133266],[0.1704286483447552,-0.756648651168345,0.704172696128834]]]*/);
 }
 function restart(){
-  cars=[];
-  neat = new Neat(numGen, mutationRate, config);
-  for(x=0;x<neat.popSize;x++){
-      cars.push(new Car(spawnCars[0], spawnCars[1], spawnCars[2], spawnCars[3], spawnCars[4]));
-  }
+  neat = new Neat(numGen, mutationRate, config, crossoverConfig);
+  generateCars();
 }
 
 function lineIntersection(x1, y1, x2, y2, x3, y3, x4, y4) {
@@ -235,6 +298,19 @@ function keyPressed(){
   }
   if(key==='y'){
     restart();
+  }
+}
+
+function writeCurrentBestCreature(){
+  document.getElementById('currentBestCrea').innerHTML=JSON.stringify(neat.getBestCreature()[0].genes);
+}
+
+function createFromCreature(){
+  let tempCreature = document.getElementById('createFromCreature').value;
+  console.log(tempCreature);
+  if(tempCreature!=null){
+    generateCars();
+    neat.makePop(JSON.parse(tempCreature));
   }
 }
 

@@ -1,9 +1,9 @@
 class Car{
-  constructor(x,y,rotation,maxSpeed,acceleration){
-    this.coord=createVector(x,y); //Check if it can be only one value
-    this.size=[25,50]
+  constructor(spawnInfo,maxSpeed,acceleration){ //spawnInfo [X, Y, Rotation, Width, Height]
+    this.coord=createVector(spawnInfo[0],spawnInfo[1]); //Check if it can be only one value
+    this.size=[spawnInfo[3],spawnInfo[4]];
 
-    this.rotation=rotation;
+    this.rotation=spawnInfo[2];
     this.steering=0; //Rotation of the wheels
     this.maxSteering=PI/8;
     this.rotationSpeed=0.16;
@@ -38,6 +38,7 @@ class Car{
     //Neat
     this.fitness=1;
     this.alive=true;
+    this.lap=0;
   }
 
   move(direction){
@@ -108,6 +109,7 @@ class Car{
           this.gate++;
           if(this.gate>=race.getGateNumber()){
             this.gate = 0;
+            this.lap++;
           }
         }
         if(race.testCollisionToGate([this.collisions[x], this.collisions[0]], tempGate)){
@@ -123,6 +125,7 @@ class Car{
           this.gate++;
           if(this.gate>=race.getGateNumber()){
             this.gate = 0;
+            this.lap++;
           }
         }
         if(race.testCollisionToGate([this.collisions[x], this.collisions[x+1]], tempGate)){
@@ -167,9 +170,9 @@ class Car{
     return inputs;
   }
 
-  draw(highlight=false){
+  draw(highlight=null){
     if(highlight){
-      fill('#c7505f');
+      fill(highlight);
     }else if(this.alive){
       fill('white');
     }else{
