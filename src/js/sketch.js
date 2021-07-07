@@ -63,6 +63,14 @@ let neat;
 //Race drawing
 var drawingState=false;
 var tempRace = [];
+var tempFinalRace = {
+  "inner":[],
+  "outer":[],
+  "gates":[],
+  "spawn":[],
+  "nnDisplay":[]
+};
+var canFinalize=false;
 
 //let tempGate = [];
 //let tempGate2=null;
@@ -116,6 +124,11 @@ function setup(){
   //Chart
   ctx = document.getElementById('scoreChart').getContext('2d');
   scoreChart=new Chart(ctx, {type:'line', data: chartData, options: {}});
+
+  //Prevent right click menu
+  for (let element of document.getElementsByClassName("p5Canvas")) {
+    element.addEventListener("contextmenu", (e) => e.preventDefault());
+  }
 }
 
 function draw(){
@@ -227,7 +240,7 @@ function draw(){
     }
   }else{
     //Race drawing
-    background('black');
+
 
 
   }
@@ -256,12 +269,6 @@ function draw(){
 //Load player car
 function loadPlayerCar(){
   car = new Car(race.spawn, spawnCars[3], spawnCars[4]);
-}
-
-//Race drawing
-function drawRace(){
-  drawingState=!drawingState;
-  document.getElementById('drawRaceButton').innerHTML= drawingState ? "Cancel drawing" : "Draw a race";
 }
 
 //Start-restart function neat
@@ -314,8 +321,87 @@ function createFromCreature(){
   }
 }
 
-/*
-function mouseClicked(){
+//Race drawing
+function drawRace(){
+  drawingState=!drawingState;
+  document.getElementById('drawRaceButton').innerHTML= drawingState ? "Cancel drawing" : "Draw a race";
+  if(drawRace) drawTempRacePattern();
+}
+
+function finalizeRace(){
+  if(canFinalize){
+    spawnCars = [tempRace[0][0],tempRace[0][1],atan2((tempRace[1][0]-tempRace[0][0]),(tempRace[1][0]-tempRace[1][1]))+PI,50,25];
+    tempFinalRace.spawn = [tempRace[0][0],tempRace[0][1],atan2((tempRace[1][0]-tempRace[0][0]),(tempRace[1][0]-tempRace[1][1]))+PI,50,25];
+    for(let x=0;x<tempRace.length-1;x++){
+      let px= (tempRace[x][1] - tempRace[x+1][1])/1.2;
+      let py= (tempRace[x+1][0] - tempRace[x][0])/1.2;
+      const len = 100 / Math.hypot(px, py);
+      px *= len;
+      py *= len;
+      line(tempRace[x][0]+px,tempRace[x][1]+py,tempRace[x][0]-px,tempRace[x][1]-py);
+      tempFinalRace.inner.push([tempRace[x][0]-px,tempRace[x][1]-py]);
+      tempFinalRace.outer.push([tempRace[x][0]+px,tempRace[x][1]+py]);
+      tempFinalRace.gates.push([[tempRace[x][0]+px,tempRace[x][1]+py],[tempRace[x][0]-px,tempRace[x][1]-py]]);
+    }
+    tempFinalRace.inner.push(tempFinalRace.inner[0]);
+    tempFinalRace.outer.push(tempFinalRace.outer[0]);
+    let tempRacettt = new Race(tempFinalRace);
+    console.log(spawnCars);
+    let test = new Car(spawnCars, 10,0.5);
+    console.log(test);
+    test.update();
+    test.draw();
+    tempRacettt.draw();
+    race=tempRacettt;
+    drawingState=!drawingState;
+    document.getElementById('drawRaceButton').innerHTML= drawingState ? "Cancel drawing" : "Draw a race";
+  }
+}
+
+function drawTempRacePattern(){
+  background('black');
+
+  if(tempRace.length>0){
+    for(let x=0;x<tempRace.length-1;x++){
+      stroke('white');
+      strokeWeight(5);
+      line(tempRace[x][0],tempRace[x][1],tempRace[x+1][0],tempRace[x+1][1]);
+    }
+  }
+  for(let x=0;x<tempRace.length;x++){
+    if(x==0){
+      stroke('red');
+      strokeWeight(10);
+    }else{
+      stroke('yellow');
+      strokeWeight(5);
+    }
+    ellipse(tempRace[x][0],tempRace[x][1],5,5);
+  }
+}
+
+function mousePressed(){
+  if(drawingState){
+    if(mouseButton === LEFT){
+      if(mouseX>0&&mouseX<width&&mouseY>0&&mouseY<height){
+        tempRace.push([mouseX, mouseY]);
+        if(tempRace.length>4 && dist(tempRace[0][0], tempRace[0][1], tempRace[tempRace.length-1][0], tempRace[tempRace.length-1][1]) < 50){ //Arbitrary value
+          canFinalize=true;
+          document.getElementById('finalizeRaceButton').hidden=false;
+        }else{
+          canFinalize=false;
+          document.getElementById('finalizeRaceButton').hidden=true;
+        }
+      }
+    }
+    if(mouseButton === RIGHT){
+      tempRace.pop();
+    }
+
+    drawTempRacePattern();
+
+
+  }
   //Race drawing
   //tempRace.push([mouseX, mouseY]);
   //Gate drawing
@@ -326,4 +412,4 @@ function mouseClicked(){
   }else{
     tempGate2=[mouseX, mouseY];
   }*/
-/*}*/
+}

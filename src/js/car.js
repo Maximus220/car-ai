@@ -101,6 +101,7 @@ class Car{
     for(let x=0;x<this.collisions.length;x++){
       if(x==this.collisions.length-1){
         if(race.testCollision([this.collisions[x], this.collisions[0]])){
+          console.log(this.gate + " - ");
           this.die();
           break;
         }
@@ -113,7 +114,9 @@ class Car{
           }
         }
         if(race.testCollisionToGate([this.collisions[x], this.collisions[0]], tempGate)){
+          console.log(this.gate + " - ");
           this.die();
+          break;
         }
       }else{
         if(race.testCollision([this.collisions[x], this.collisions[x+1]])){
@@ -129,7 +132,9 @@ class Car{
           }
         }
         if(race.testCollisionToGate([this.collisions[x], this.collisions[x+1]], tempGate)){
+          console.log(this.gate + " - ");
           this.die();
+          break;
         }
       }
       if(this.gate===prevGate){
