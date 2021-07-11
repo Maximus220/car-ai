@@ -22,8 +22,8 @@ var racePattern={
     300, //Width
     300, //Height
     15, //Node Size
-    100, //X
-    300 //Y
+    200, //X
+    450 //Y
   ]
 };
 var race;
@@ -39,6 +39,10 @@ var highlightBest = false;
 var showTrack = true;
 var showGates = false;
 var gameSpeed = 1;
+
+//Display
+var useSprite = true;
+var displayHitbox = false;
 
 //Neat parameters
 var cars = [];
@@ -56,7 +60,8 @@ let config = {
 }
 let crossoverConfig = {
   type: "biggerRandomPart",
-  randomSupplement: 0.25
+  randomSupplement: 0.25,
+  keepBest: true
 }
 let neat;
 
@@ -86,11 +91,23 @@ var chartData = {datasets:[{
 }], labels:[]};
 
 function addScore(data) { //Chart update function
-    scoreChart.data.labels.push(neat.generation);
+    scoreChart.data.labels.push(neat.generation+1);
 		scoreChart.data.datasets.forEach((dataset) => {
         dataset.data.push(data);
     });
     scoreChart.update();
+}
+
+function resetDataset(){
+  scoreChart.data.datasets.forEach((dataset) => {
+    dataset.data = [];
+  });
+  scoreChart.data.labels = [];
+  scoreChart.update();
+}
+
+function preload(){
+  carSprite = loadImage("https://media.discordapp.net/attachments/402913118784585728/863873066807722014/Sans_titre-1.png?width=45&height=90");
 }
 
 function setup(){
@@ -98,6 +115,16 @@ function setup(){
   window.canvas = createCanvas(2000, 1350);
   window.canvas.parent('mainCanvas');
   rectMode(CENTER);
+  imageMode(CENTER);
+
+  //Chart
+  ctx = document.getElementById('scoreChart').getContext('2d');
+  scoreChart=new Chart(ctx, {type:'line', data: chartData, options: {}});
+
+  //Prevent right click menu
+  for (let element of document.getElementsByClassName("p5Canvas")) {
+    element.addEventListener("contextmenu", (e) => e.preventDefault());
+  }
 
   //Game parameters
   race = new Race(racePattern);
@@ -120,15 +147,6 @@ function setup(){
   accelerationSlider.parent('accelerationSlider');
   speedSlider = createSlider(0, 20, gameSpeed, 1);
   speedSlider.parent('speedSlider');
-
-  //Chart
-  ctx = document.getElementById('scoreChart').getContext('2d');
-  scoreChart=new Chart(ctx, {type:'line', data: chartData, options: {}});
-
-  //Prevent right click menu
-  for (let element of document.getElementsByClassName("p5Canvas")) {
-    element.addEventListener("contextmenu", (e) => e.preventDefault());
-  }
 }
 
 function draw(){
@@ -159,7 +177,7 @@ function draw(){
   //Draw + updates
   if(!drawingState){
     for(let z=0;z<gameSpeed;z++){
-      background('black');
+      background('#95bff5');
       alive=0;
       for(i=0;i<cars.length;i++){
         if(cars[i].alive){
@@ -205,7 +223,7 @@ function draw(){
           nnDisplay.remove();
         }
         nnDisplay = neat.getNeuralDisplay(best[1], 300, 300, 15);
-      	image(nnDisplay, 100,300);
+      	image(nnDisplay, 200,450);
       }
 
       if(!stillAlive){
@@ -281,11 +299,12 @@ function generateCars(){
 function start(){
   generateCars();
   addScore(neat.getBestCreature()[0].fit);
-  neat.makePop(/*[[[0.4096840818422428,-0.055636068960655025,-0.26857235465558393],[-0.6423431052147041,0.3068173241562083,0.49295169469630085],[0.10287158621006061,-0.06900661450287218,-0.11768708814919066],[-0.14874823191360848,0.532285399189419,0.07947750196666666],[0.0948671242972238,-0.1846340592239048,0.43639989233216275],[-0.12724760896716986,0.05376411762723943,-0.060197552657133266],[0.1704286483447552,-0.756648651168345,0.704172696128834]]]*/);
+  neat.makePop();
 }
 function restart(){
   neat = new Neat(numGen, mutationRate, config, crossoverConfig);
   generateCars();
+  resetDataset();
 }
 
 function lineIntersection(x1, y1, x2, y2, x3, y3, x4, y4) {
@@ -318,6 +337,7 @@ function createFromCreature(){
   if(tempCreature!=null){
     generateCars();
     neat.makePop(JSON.parse(tempCreature));
+    resetDataset();
   }
 }
 
@@ -355,11 +375,12 @@ function finalizeRace(){
     race=tempRacettt;
     drawingState=!drawingState;
     document.getElementById('drawRaceButton').innerHTML= drawingState ? "Cancel drawing" : "Draw a race";
+    restart();
   }
 }
 
 function drawTempRacePattern(){
-  background('black');
+  background('#95bff5');
 
   if(tempRace.length>0){
     for(let x=0;x<tempRace.length-1;x++){

@@ -8,6 +8,7 @@ class Neat{
     this.crossoverType = crossoverConfig.type || "halfFromParent";//"halfFromParent"; "percentOfHalfParent"; "biggerRandomPart"
     //For "percentOfHalfParent" method
     this.randomSupplement = crossoverConfig.randomSupplement || 0.25;
+    this.keepBestCreature = crossoverConfig.keepBest || false;
 
     for(let x=0;x<this.popSize;x++){
       let tWeights = [];

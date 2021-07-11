@@ -189,21 +189,27 @@ class Car{
     push();
     translate(this.coord.x,this.coord.y);
     rotate(-this.rotation);
+    if(useSprite) rotate(PI);
     translate(-this.coord.x,-this.coord.y);
-    rect(this.coord.x,this.coord.y,this.size[0],this.size[1]);
-
-    strokeWeight(0);
-    fill('red');
-    rect(this.coord.x,this.coord.y-this.size[0]/3*2,this.size[0]/4,this.size[1]/4);
+    if(useSprite){
+      image(carSprite, this.coord.x,this.coord.y,this.size[0]*1.3,this.size[1]*1.3);
+    }else{
+      rect(this.coord.x,this.coord.y,this.size[0],this.size[1]);
+      strokeWeight(0);
+      fill('red');
+      rect(this.coord.x,this.coord.y-this.size[0]/3*2,this.size[0]/4,this.size[1]/4);
+    }
 
     //Hitbox
-    stroke('green');
-    strokeWeight(3);
-    for(let x=0;x<this.collisions.length;x++){
-      if(x==this.collisions.length-1){
-        line(this.collisions[x].x, this.collisions[x].y, this.collisions[0].x, this.collisions[0].y);
-      }else{
-        line(this.collisions[x].x, this.collisions[x].y, this.collisions[x+1].x, this.collisions[x+1].y);
+    if(displayHitbox){
+      stroke('green');
+      strokeWeight(3);
+      for(let x=0;x<this.collisions.length;x++){
+        if(x==this.collisions.length-1){
+          line(this.collisions[x].x, this.collisions[x].y, this.collisions[0].x, this.collisions[0].y);
+        }else{
+          line(this.collisions[x].x, this.collisions[x].y, this.collisions[x+1].x, this.collisions[x+1].y);
+        }
       }
     }
     pop();
