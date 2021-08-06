@@ -41,7 +41,8 @@ var showGates = false;
 var gameSpeed = 1;
 
 //Display
-var useSprite = true;
+var useSprite = false;
+var spriteSizeCoef = 1.3;
 var displayHitbox = false;
 
 //Neat parameters
@@ -52,6 +53,10 @@ let config = {
     {
       node: 7
     },
+    /*{
+      node: 3,
+      actFunction: 'SIGMOID'
+    },*/
     {
       node: 3,
       actFunction: 'SIGMOID'
@@ -61,50 +66,11 @@ let config = {
 let crossoverConfig = {
   type: "biggerRandomPart",
   randomSupplement: 0.25,
-  keepBest: true
+  keepBest: true,
+  advancedMutation: true
 }
 let neat;
 
-//Race drawing
-var drawingState=false;
-var tempRace = [];
-var tempFinalRace = {
-  "inner":[],
-  "outer":[],
-  "gates":[],
-  "spawn":[],
-  "nnDisplay":[]
-};
-var canFinalize=false;
-
-//let tempGate = [];
-//let tempGate2=null;
-
-//Chart
-var ctx;
-var scoreChart;
-var chartData = {datasets:[{
-	data:[],
-	label:['Fitness'],
-	fill: false,
-	borderColor: ['#3669cf']
-}], labels:[]};
-
-function addScore(data) { //Chart update function
-    scoreChart.data.labels.push(neat.generation+1);
-		scoreChart.data.datasets.forEach((dataset) => {
-        dataset.data.push(data);
-    });
-    scoreChart.update();
-}
-
-function resetDataset(){
-  scoreChart.data.datasets.forEach((dataset) => {
-    dataset.data = [];
-  });
-  scoreChart.data.labels = [];
-  scoreChart.update();
-}
 
 function preload(){
   carSprite = loadImage("https://media.discordapp.net/attachments/402913118784585728/863873066807722014/Sans_titre-1.png?width=45&height=90");
@@ -147,6 +113,8 @@ function setup(){
   accelerationSlider.parent('accelerationSlider');
   speedSlider = createSlider(0, 20, gameSpeed, 1);
   speedSlider.parent('speedSlider');
+  spriteSizeSlider = createSlider(0.5, 3.5, spriteSizeCoef, 0.1);
+  spriteSizeSlider.parent('spriteSizeSlider');
 }
 
 function draw(){
@@ -163,6 +131,19 @@ function draw(){
   showTrack = document.getElementById('showTrack').checked;
   showGates = document.getElementById('showGates').checked;
   playerCar = document.getElementById('boxPlay').checked;
+  useSprite = document.getElementById('useSpriteBox').checked;
+
+  if(useSprite){
+		document.getElementById('spriteSizeDisplay').style.display = "block";
+		spriteSizeSlider.show();
+		spriteSizeCoef=spriteSizeSlider.value();
+		document.getElementById('spriteSizeDisplay').innerHTML = spriteSizeCoef;
+	}else{
+		spriteSizeSlider.hide();
+		document.getElementById('spriteSizeDisplay').style.display = "none";
+	}
+
+  displayHitbox = document.getElementById('displayHitbox').checked;
   frixion = frixionSlider.value();
   document.getElementById('frixionDisplay').innerHTML= frixion;
   spawnCars[3]=maxSpeedSlider.value();
@@ -256,32 +237,7 @@ function draw(){
         if(showGates) race.drawGates();
       }
     }
-  }else{
-    //Race drawing
-
-
-
   }
-
-
-  //Race drawing
-  /*if(tempRace.length>1){
-    for(let x=0;x<tempRace.length-1;x++){
-      stroke('white');
-      strokeWeight(5);
-      line(tempRace[x][0],tempRace[x][1],tempRace[x+1][0],tempRace[x+1][1]);
-    }
-  }*/
-  //Gate drawing
-  /*if(tempGate.length>0){
-    for(let x=0;x<tempGate.length;x++){
-      push();
-      stroke('yellow');
-      strokeWeight(5);
-      line(tempGate[x][0][0],tempGate[x][0][1],tempGate[x][1][0],tempGate[x][1][1]);
-      pop();
-    }
-  }*/
 }
 
 //Load player car
@@ -307,7 +263,7 @@ function restart(){
   resetDataset();
 }
 
-function lineIntersection(x1, y1, x2, y2, x3, y3, x4, y4) {
+function lineIntersection(x1, y1, x2, y2, x3, y3, x4, y4){
   // calculate the distance to intersection point
   let denom = ((y4-y3)*(x2-x1) - (x4-x3)*(y2-y1))
   let uA = ((x4-x3)*(y1-y3) - (y4-y3)*(x1-x3)) / denom;
@@ -316,8 +272,8 @@ function lineIntersection(x1, y1, x2, y2, x3, y3, x4, y4) {
   // if uA and uB are between 0-1, lines are colliding
   if (uA < 0 || uA > 1 || uB < 0 || uB > 1) return null;
   return createVector(x1 + (uA * (x2-x1)), y1 + (uA * (y2-y1)));
-
 }
+
 function keyPressed(){
   if(key==='r'){
     start();
@@ -339,98 +295,4 @@ function createFromCreature(){
     neat.makePop(JSON.parse(tempCreature));
     resetDataset();
   }
-}
-
-//Race drawing
-function drawRace(){
-  drawingState=!drawingState;
-  document.getElementById('drawRaceButton').innerHTML= drawingState ? "Cancel drawing" : "Draw a race";
-  if(drawRace) drawTempRacePattern();
-}
-
-function finalizeRace(){
-  if(canFinalize){
-    spawnCars = [tempRace[0][0],tempRace[0][1],atan2((tempRace[1][0]-tempRace[0][0]),(tempRace[1][0]-tempRace[1][1]))+PI,50,25];
-    tempFinalRace.spawn = [tempRace[0][0],tempRace[0][1],atan2((tempRace[1][0]-tempRace[0][0]),(tempRace[1][0]-tempRace[1][1]))+PI,50,25];
-    for(let x=0;x<tempRace.length-1;x++){
-      let px= (tempRace[x][1] - tempRace[x+1][1])/1.2;
-      let py= (tempRace[x+1][0] - tempRace[x][0])/1.2;
-      const len = 100 / Math.hypot(px, py);
-      px *= len;
-      py *= len;
-      line(tempRace[x][0]+px,tempRace[x][1]+py,tempRace[x][0]-px,tempRace[x][1]-py);
-      tempFinalRace.inner.push([tempRace[x][0]-px,tempRace[x][1]-py]);
-      tempFinalRace.outer.push([tempRace[x][0]+px,tempRace[x][1]+py]);
-      tempFinalRace.gates.push([[tempRace[x][0]+px,tempRace[x][1]+py],[tempRace[x][0]-px,tempRace[x][1]-py]]);
-    }
-    tempFinalRace.inner.push(tempFinalRace.inner[0]);
-    tempFinalRace.outer.push(tempFinalRace.outer[0]);
-    let tempRacettt = new Race(tempFinalRace);
-    console.log(spawnCars);
-    let test = new Car(spawnCars, 10,0.5);
-    console.log(test);
-    test.update();
-    test.draw();
-    tempRacettt.draw();
-    race=tempRacettt;
-    drawingState=!drawingState;
-    document.getElementById('drawRaceButton').innerHTML= drawingState ? "Cancel drawing" : "Draw a race";
-    restart();
-  }
-}
-
-function drawTempRacePattern(){
-  background('#95bff5');
-
-  if(tempRace.length>0){
-    for(let x=0;x<tempRace.length-1;x++){
-      stroke('white');
-      strokeWeight(5);
-      line(tempRace[x][0],tempRace[x][1],tempRace[x+1][0],tempRace[x+1][1]);
-    }
-  }
-  for(let x=0;x<tempRace.length;x++){
-    if(x==0){
-      stroke('red');
-      strokeWeight(10);
-    }else{
-      stroke('yellow');
-      strokeWeight(5);
-    }
-    ellipse(tempRace[x][0],tempRace[x][1],5,5);
-  }
-}
-
-function mousePressed(){
-  if(drawingState){
-    if(mouseButton === LEFT){
-      if(mouseX>0&&mouseX<width&&mouseY>0&&mouseY<height){
-        tempRace.push([mouseX, mouseY]);
-        if(tempRace.length>4 && dist(tempRace[0][0], tempRace[0][1], tempRace[tempRace.length-1][0], tempRace[tempRace.length-1][1]) < 50){ //Arbitrary value
-          canFinalize=true;
-          document.getElementById('finalizeRaceButton').hidden=false;
-        }else{
-          canFinalize=false;
-          document.getElementById('finalizeRaceButton').hidden=true;
-        }
-      }
-    }
-    if(mouseButton === RIGHT){
-      tempRace.pop();
-    }
-
-    drawTempRacePattern();
-
-
-  }
-  //Race drawing
-  //tempRace.push([mouseX, mouseY]);
-  //Gate drawing
-  /*
-  if(tempGate2){
-    tempGate.push([tempGate2, [mouseX, mouseY]]);
-    tempGate2=null;
-  }else{
-    tempGate2=[mouseX, mouseY];
-  }*/
 }

@@ -23,8 +23,8 @@ class Car{
     this.sights = [
       PI,
       2*PI,
-      5*PI/4,
-      7*PI/4,
+      5*PI/4, //Those two inputs can be removed
+      7*PI/4, //To show results that seem better
       4*PI/3,
       5*PI/3,
       PI*1.5
@@ -36,7 +36,7 @@ class Car{
     this.noGate=0;
 
     //Neat
-    this.fitness=1;
+    this.fitness=0;
     this.alive=true;
     this.lap=0;
   }
@@ -97,11 +97,11 @@ class Car{
     }else{
       tempGate=race.getGateNumber()-this.gate-4;
     }
+    //console.log(tempGate);
     let prevGate=this.gate;
     for(let x=0;x<this.collisions.length;x++){
       if(x==this.collisions.length-1){
         if(race.testCollision([this.collisions[x], this.collisions[0]])){
-          console.log(this.gate + " - ");
           this.die();
           break;
         }
@@ -114,7 +114,6 @@ class Car{
           }
         }
         if(race.testCollisionToGate([this.collisions[x], this.collisions[0]], tempGate)){
-          console.log(this.gate + " - ");
           this.die();
           break;
         }
@@ -132,7 +131,6 @@ class Car{
           }
         }
         if(race.testCollisionToGate([this.collisions[x], this.collisions[x+1]], tempGate)){
-          console.log(this.gate + " - ");
           this.die();
           break;
         }
@@ -192,7 +190,7 @@ class Car{
     if(useSprite) rotate(PI);
     translate(-this.coord.x,-this.coord.y);
     if(useSprite){
-      image(carSprite, this.coord.x,this.coord.y,this.size[0]*1.3,this.size[1]*1.3);
+      image(carSprite, this.coord.x,this.coord.y,this.size[0]*spriteSizeCoef,this.size[1]*spriteSizeCoef);
     }else{
       rect(this.coord.x,this.coord.y,this.size[0],this.size[1]);
       strokeWeight(0);

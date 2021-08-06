@@ -4,6 +4,8 @@ class Node{
     this.isOutput = isOutput;
     this.weights = [];
     this.value = 0;
+
+    this.alternativeNodes = [];
   }
 
   setValue(value){

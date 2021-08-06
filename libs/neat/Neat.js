@@ -5,10 +5,7 @@ class Neat{
     this.nnConfig = nnConfig;
     this.generation=0;
     this.popSize = popSize;
-    this.crossoverType = crossoverConfig.type || "halfFromParent";//"halfFromParent"; "percentOfHalfParent"; "biggerRandomPart"
-    //For "percentOfHalfParent" method
-    this.randomSupplement = crossoverConfig.randomSupplement || 0.25;
-    this.keepBestCreature = crossoverConfig.keepBest || false;
+    this.changeCrossoverConfig(crossoverConfig);
 
     for(let x=0;x<this.popSize;x++){
       let tWeights = [];
@@ -27,6 +24,14 @@ class Neat{
       nn.init(tWeights);
       this.pop.push(new Creature(nn, tWeights));
     }
+  }
+
+  changeCrossoverConfig(crossoverConfig){
+    this.crossoverType = crossoverConfig.type || "halfFromParent";//"halfFromParent"; "percentOfHalfParent"; "biggerRandomPart"
+    this.keepBestCreature = crossoverConfig.keepBest || false;
+    this.advancedMutation = crossoverConfig.advancedMutation || false;
+    //For "percentOfHalfParent" method
+    this.randomSupplement = crossoverConfig.randomSupplement || 0.25;
   }
 
   setInputs(inputs, index){
@@ -67,14 +72,23 @@ class Neat{
     //Create pool
     let pool = [];
     if(!fromGene/*||fromGene.length!=*/){ //Eventually add other test later
-      let bestFit = this.getBestCreature()[0].fit;
+      let bestCrea = this.getBestCreature()[0];
+      let bestFit = bestCrea.fit;
       for(let x=0;x<this.pop.length;x++){
         for(let y=0;y<floor(map(this.pop[x].fit, 0, bestFit, 0, 1000));y++){
           pool.push(this.pop[x]);
         }
       }
-      for(let x=0;x<this.popSize;x++){
-        newPop.push(this.crossover(pool));
+      if(this.keepBestCreature){
+        bestCrea.resetFit();
+        newPop.push(bestCrea);
+        for(let x=0;x<this.popSize-1;x++){
+          newPop.push(this.crossover(pool));
+        }
+      }else{
+        for(let x=0;x<this.popSize;x++){
+          newPop.push(this.crossover(pool));
+        }
       }
       this.generation++;
     }else{

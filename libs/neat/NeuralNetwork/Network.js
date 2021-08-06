@@ -92,4 +92,8 @@ class NeuralNetwork{
     }
   }
 
+  addAlternativeNode(){
+
+  }
+
 }

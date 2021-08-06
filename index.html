@@ -13,6 +13,8 @@
 
     <script language=" javascript" type="text/javascript" src="./src/js/race.js"></script>
     <script language=" javascript" type="text/javascript" src="./src/js/car.js"></script>
+    <script language=" javascript" type="text/javascript" src="./src/js/raceDrawingFunctions.js"></script>
+    <script language=" javascript" type="text/javascript" src="./src/js/chartManage.js"></script>
     <script language=" javascript" type="text/javascript" src="./src/js/sketch.js"></script>
 
   </head>
@@ -23,7 +25,7 @@
       <label for="raceParameters">Race parameters : </label>
       <div id="raceParameters" class="optDiv">
         <div class="option">
-          <button type="button" name="button" onclick="drawRace();" id="drawRaceButton">Draw a race</button>
+          <button type="button" name="button" onclick="drawRace();" id="drawRaceButton">Draw race</button>
         </div>
         <div class="option">
           <button type="button" name="button" onclick="finalizeRace();" id="finalizeRaceButton" hidden>Finalize race</button>
@@ -61,6 +63,16 @@
           <span id="frixionSlider"></span>
           <span id="frixionDisplay"></span>
         </div>
+      </div>
+
+      <label for="displayParam">Display parameters : </label>
+      <div id="displayParam" class="optDiv">
+        <div class="option">
+          <input type="checkbox" id="useSpriteBox" checked>
+          <label for="useSpriteBox"> Display sprite (might reduce performances)</label>
+          <span id="spriteSizeSlider"></span>
+          <span id="spriteSizeDisplay"></span>
+        </div>
         <div class="option">
           <input type="checkbox" id="boxBestPlayerOnly">
           <label for="boxBestPlayerOnly"> Show best creature only</label>
@@ -83,7 +95,11 @@
         </div>
         <div class="option">
           <input type="checkbox" id="onlyShowNextGateToBestPlayer">
-          <label for="onlyShowNextGateToBestPlayer"> Show next gate to best player</label>
+          <label for="onlyShowNextGateToBestPlayer"> Show next gate to best player (to-do)</label>
+        </div>
+        <div class="option">
+          <input type="checkbox" id="displayHitbox">
+          <label for="displayHitbox"> Display hitboxes</label>
         </div>
       </div>
 

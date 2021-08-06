@@ -8,4 +8,8 @@ class Creature{
   setFit(fit){
     this.fit = fit;
   }
+
+  resetFit(){
+    this.fit = 0;
+  }
 }
