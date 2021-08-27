@@ -21,8 +21,9 @@ function finalizeRace(){
       "nnDisplay":[]
     };
     spawnCars = [tempRace[0][0],tempRace[0][1],4.7123/*atan2((tempRace[1][0]-tempRace[0][0]),(tempRace[1][0]-tempRace[1][1]))+PI*/,spawnCars[3],spawnCars[4]];
-    console.log(spawnCars);
-    tempFinalRace.spawn = spawnCars;
+    let tempSpawn = [tempRace[0][0],tempRace[0][1],4.7123/*atan2((tempRace[1][0]-tempRace[0][0]),(tempRace[1][0]-tempRace[1][1]))+PI*/,race.spawn[3],race.spawn[4]];
+    console.log(tempSpawn);
+    tempFinalRace.spawn = tempSpawn;
     for(let x=0;x<tempRace.length-1;x++){
       let px= (tempRace[x][1] - tempRace[x+1][1])/1.2;
       let py= (tempRace[x+1][0] - tempRace[x][0])/1.2;

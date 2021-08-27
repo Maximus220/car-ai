@@ -166,7 +166,8 @@ class Car{
     //let inputs = [];
     let inputs = this.getSights()
     for(let x=0;x<inputs.length;x++){
-      inputs[x] = inputs[x][0][1];
+      if(inputs[x][0][1]) inputs[x] = inputs[x][0][1];
+      else inputs[x] = inputs[x][0];
     }
     return inputs;
   }
