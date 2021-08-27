@@ -148,28 +148,26 @@ class Car{
     //Neat
     //this.fitness+= (int(dist(this.coord.x,target.getX(),this.coord.y,target.getY())))**2; //HERE
   }
-  getInputs(){
-    let inputs = [];
+
+  getSights(){
+    let sights = [];
     for(let i=0;i<this.sights.length;i++){
       let a = this.sights[i];
       let coord2 = createVector(this.coord.x+cos(a-this.rotation)*this.sighLength,this.coord.y+sin(a-this.rotation)*this.sighLength);
       let closest = race.findClosestCollide([this.coord, coord2]);
-      if(closest != null){
-        if(globalSighDisplay){
-          push();
-          stroke('purple');
-          line(this.coord.x,this.coord.y,coord2.x,coord2.y);
-          fill('red');
-          noStroke();
-          ellipse(closest[0].x,closest[0].y,25, 25);
-          pop();
-        }
-        inputs.push(closest[1]);
-      }else{
-         inputs.push(this.sighLength);
-      }
-    }
 
+      if(closest != null) sights.push([closest, coord2]);
+      else sights.push(this.sighLength, null);
+    }
+    return sights;
+  }
+
+  getInputs(){
+    //let inputs = [];
+    let inputs = this.getSights()
+    for(let x=0;x<inputs.length;x++){
+      inputs[x] = inputs[x][0][1];
+    }
     return inputs;
   }
 
@@ -197,7 +195,6 @@ class Car{
       fill('red');
       rect(this.coord.x,this.coord.y-this.size[0]/3*2,this.size[0]/4,this.size[1]/4);
     }
-
     //Hitbox
     if(displayHitbox){
       stroke('green');
@@ -211,6 +208,22 @@ class Car{
       }
     }
     pop();
+
+    //Sights
+    if(globalSighDisplay){
+      let sights = this.getSights();
+      for(let x=0;x<sights.length;x++){
+        if(sights[x][1]){
+          push();
+          stroke('purple');
+          line(this.coord.x,this.coord.y,sights[x][1].x,sights[x][1].y);
+          fill('red');
+          noStroke();
+          ellipse(sights[x][0][0].x,sights[x][0][0].y,25, 25);
+          pop();
+        }
+      }
+    }
   }
 
   die(){
