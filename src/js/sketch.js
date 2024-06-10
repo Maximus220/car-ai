@@ -73,7 +73,7 @@ let neat;
 
 
 function preload(){
-  carSprite = loadImage("https://media.discordapp.net/attachments/402913118784585728/863873066807722014/Sans_titre-1.png?width=45&height=90");
+  carSprite = loadImage("https://openclipart.org/image/2000px/61201");
 }
 
 function setup(){
