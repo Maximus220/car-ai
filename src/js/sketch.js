@@ -73,7 +73,7 @@ let neat;
 
 
 function preload(){
-  carSprite = loadImage("https://openclipart.org/image/2000px/61201");
+  carSprite = loadImage("https://drive.google.com/file/d/1HnZJKLIhh0ghcsh3-yiiEXMCcNAUGKLi/view?usp=share_link");
 }
 
 function setup(){
