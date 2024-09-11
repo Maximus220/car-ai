@@ -73,7 +73,7 @@ let neat;
 
 
 function preload(){
-  carSprite = loadImage("https://drive.google.com/file/d/1HnZJKLIhh0ghcsh3-yiiEXMCcNAUGKLi/view?usp=share_link");
+  carSprite = loadImage("https://ibb.co/0qyVvtj");
 }
 
 function setup(){
