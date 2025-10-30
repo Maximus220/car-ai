@@ -3,7 +3,7 @@
 **💡 This project is an Artificial Intelligence learning to drive a car from scratch (no knowledge of how to go forward, turn, nothing).**
 
 <div align="center" font-weight="bold">
-	<img src="./demo/sim.png" width="700">
+	<img src="./demo/demo.png" width="700">
 </div>
 
 # ❓ How to use
